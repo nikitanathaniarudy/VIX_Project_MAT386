@@ -25,7 +25,7 @@ RANDOM_SEED = 42
 # ----------------------------------------------------------------- VIX calculation
 VIX_TARGET_DAYS = 30
 VIX_MIN_DAYS, VIX_MAX_DAYS = 23, 37                  # expiries used must lie in this range
-SNAPSHOT_TIME_ET = "13:00"                           # Thursday 5 Nov 2026
+SNAPSHOT_TIME_ET = "11:42"                           # Thursday 5 Nov 2026
 
 # ----------------------------------------------------------------- backtest
 BACKTEST_START = "2015-01-02"
