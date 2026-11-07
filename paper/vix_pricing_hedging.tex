@@ -66,7 +66,7 @@ Costs nothing upfront, but the loss is symmetric: if VIX falls below $F_0(T)$, y
 \subsubsection{VIX calls (long)}
 The payoff is
 \[
-    \mathrm{Payoff} = 1000 N (\mathrm{VIX}_T - K)^+
+    \mathrm{Payoff} = 100 N (\mathrm{VIX}_T - K)^+
 \]
 and you pay premium $C_0$ upfront. Your worst loss is capped at the premium, and the upside is convex.
 
@@ -97,7 +97,7 @@ Note that for VIX future
 \]
 since there is no upfront payment, and for VIX call
 \[
-    C_0 = e^{-rT_1} \mathbb{E}^{\mathbb{Q}}[1000(\mathrm{VIX}_{T_1} - K)^+]
+    C_0 = e^{-rT_1} \mathbb{E}^{\mathbb{Q}}[100(\mathrm{VIX}_{T_1} - K)^+]
 \]
 
 Here $e^{-rT}$ discounts money received at time $T$ back to today at interest rate $r$, using the same principle as the option pricing.
@@ -118,7 +118,7 @@ roll cost from contango.
 
 For calls:
 \[
-    \Delta \Pi = \Delta P + 1000 N (\mathrm{VIX}_T - K)^+ - N C_0
+    \Delta \Pi = \Delta P + 100 N (\mathrm{VIX}_T - K)^+ - N C_0
 \]
 where $C_0$ is the premium per contract including the multiplier.
 
