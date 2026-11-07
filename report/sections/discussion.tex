@@ -1,50 +1,9 @@
-\documentclass[11pt,a4paper]{article}
+% Discussion (Josh). Moved from paper/vix_discussion.tex; headings demoted one level, preamble moved to main.tex.
 
-\usepackage[margin=2.5cm]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{xcolor}
-\usepackage{float}
-\usepackage{caption}
-\usepackage{tikz}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.16}
-\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\subsection{The VIX as the Market's ``Fear Gauge''}
+\subsubsection{What the VIX measures}
 
-% Flag anything that still needs a source before it goes in the final report.
-\newcommand{\verify}[1][]{\textcolor{red}{\textsuperscript{[verify#1]}}}
-
-% Placeholder box for a real-data figure you still need to generate.
-\newcommand{\figplaceholder}[2]{%
-  \fbox{\parbox[c][#1][c]{0.9\linewidth}{\centering\textit{#2}}}}
-
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\VIX}{\mathrm{VIX}}
-
-\title{VIX and VIX Derivatives\\[2pt]\large Part 1: Discussion}
-\author{MAT386 Group Project --- Pricing of Derivatives}
-\date{November 2026}
-
-\begin{document}
-\maketitle
-
-\begin{abstract}
-\noindent
-This section introduces the Cboe Volatility Index (VIX) as the market's ``fear gauge'', explains how VIX futures, options and exchange-traded products allow investors to trade volatility directly, and examines the February 2018 ``Volmageddon'' episode in which short-volatility products collapsed. Items marked \verify{} are drawn from memory and must be checked against a source before submission.
-\end{abstract}
-
-\tableofcontents
-\newpage
-
-%=====================================================================
-\section{The VIX as the Market's ``Fear Gauge''}
-%=====================================================================
-
-\subsection{What the VIX measures}
-
-The VIX is an index published by Cboe that measures the stock market's \emph{expected} volatility of the S\&P~500 over the next 30 calendar days. It is quoted in annualized percentage points. The VIX is \emph{forward-looking}: it is computed from the market prices of S\&P~500 index options, and is therefore a form of \emph{implied} volatility \cite{cboe}. This is in contrast to historical (realized) volatility, which looks backward at past returns. 
+The VIX is an index published by Cboe that measures the stock market's \emph{expected} volatility of the S\&P~500 over the next 30 calendar days. It is quoted in annualized percentage points. The VIX is \emph{forward-looking}: it is computed from the market prices of S\&P~500 index options, and is therefore a form of \emph{implied} volatility \cite{cboewp}. This is in contrast to historical (realized) volatility, which looks backward at past returns. 
 
 Using the annualized convention, a VIX of $20$ corresponds to an expected one-standard-deviation move of the S\&P~500 over one month of about
 \begin{equation}
@@ -75,7 +34,7 @@ Because listed options rarely expire in exactly 30 days, Cboe selects two expira
 where $N_{T_1}$ and $N_{T_2}$ are the minutes to settlement for the two expirations, $N_{30} = 43{,}200$ minutes (30 days), and $N_{365} = 525{,}600$ minutes (365 days). The theoretical derivation of~\eqref{eq:vix-term} from variance-swap replication is presented in the pricing section of this report.
 
 
-\subsection{Why it is called the fear gauge}
+\subsubsection{Why it is called the fear gauge}
 
 Investors who fear a market decline buy protection, typically out-of-the-money put options. Higher demand raises option prices and thus implied volatility. Equity returns and the VIX are strongly negatively correlated: the VIX tends to rise sharply when the S\&P~500 falls, and to drift lower in calm, rising markets. This asymmetry explains why VIX products are attractive as portfolio hedges.
 
@@ -83,21 +42,17 @@ Typical levels are roughly 10--15 in calm markets, a long-run average near 19--2
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=0.9\linewidth]{figs/vix_vs_spx.pdf}
-  \figplaceholder{5cm}{Figure 1: VIX and S\&P~500 over time (e.g.\ 2005--present), with 2008, Feb.\ 2018 and Mar.\ 2020 marked. Data: Cboe / Yahoo Finance (\texttt{\textasciicircum VIX}, \texttt{\textasciicircum GSPC}).}
-  \caption{VIX and S\&P~500 index level. (to be done: replace placeholder with generated plot.)}
+  \includegraphics[width=0.9\linewidth]{figures/vix_vs_spx.pdf}
+  \caption{S\&P~500 (top) and VIX (bottom), daily closes, January 2010 -- November 2026. Dotted lines mark 5 February 2018 and 16 March 2020; the dashed line is the average VIX over the period. Data: Yahoo Finance (\texttt{\textasciicircum GSPC}, \texttt{\textasciicircum VIX}).}
   \label{fig:vix-spx}
 \end{figure}
 
-%=====================================================================
-\section{Trading Volatility Directly}
-%=====================================================================
-
-\subsection{Why volatility is hard to trade}
+\subsection{Trading Volatility Directly}
+\subsubsection{Why volatility is hard to trade}
 
 The VIX is a calculation, not a tradable asset: it cannot be bought, stored or delivered. Before volatility derivatives existed, investors could gain exposure to volatility only indirectly, for instance through delta-hedged option positions, which require continual rebalancing and carry other risks. Listed volatility products give a \emph{direct} and cheap way to take a view on volatility itself.
 
-\subsection{The VIX product family}
+\subsubsection{The VIX product family}
 
 Cboe introduced the VIX in 1993, adopted the current option-based methodology in 2003, launched VIX futures in 2004 and VIX options in 2006\verify. Exchange-traded products linked to VIX futures followed from 2009 onward\verify. Table~\ref{tab:products} summarizes the main instruments.
 
@@ -115,7 +70,7 @@ FILL IN & FILL IN, FILL IN & FILL IN & FILL IN\\
 \label{tab:products}
 \end{table}
 
-\subsection{Why investors trade VIX products}
+\subsubsection{Why investors trade VIX products}
 
 \begin{itemize}
   \item \textbf{Hedging.} Because the VIX rises when equities fall, a long volatility position can offset losses in an equity portfolio.
@@ -123,11 +78,8 @@ FILL IN & FILL IN, FILL IN & FILL IN & FILL IN\\
   \item \textbf{Volatility risk premium.} Implied volatility tends on average to exceed subsequently realized volatility, so systematically selling volatility earns a premium, but with the risk of large losses in crashes.
 \end{itemize}
 
-%=====================================================================
-\section{VIX Exchange-Traded Products}
-%=====================================================================
-
-\subsection{How VXX works}
+\subsection{VIX Exchange-Traded Products}
+\subsubsection{How VXX works}
 
 The iPath S\&P~500 VIX Short-Term Futures ETN (ticker \texttt{VXX}) was launched by Barclays Bank PLC in January 2009. Upon the scheduled 10-year maturity of the original notes in January 2019, it was replaced by the Series~B notes (initially launched as \texttt{VXXB} in January 2018 and subsequently renamed \texttt{VXX}) \cite{vxx}. VXX tracks the S\&P~500 VIX Short-Term Futures Index, which targets a constant maturity of approximately 30 days by holding a rolling position in the first- and second-month VIX futures contracts. Two structural features are essential:
 
@@ -145,7 +97,7 @@ If $d_r$ business days remain before the first future expires and the current ro
 \end{equation}
 where $F_1,F_2$ are the first- and second-month VIX futures prices. Each day exposure shifts from $F_1$ towards $F_2$, so the product continually sells the nearer future and buys the next.
 
-\subsection{Roll yield and the decay of long-volatility ETPs}
+\subsubsection{Roll yield and the decay of long-volatility ETPs}
 
 Under normal conditions the VIX futures curve is in \emph{contango}: later-dated futures trade above the spot VIX (see the term-structure discussion in the next section). A future converges to the spot VIX at expiry, so if spot VIX does not move, a long position in the future $F_0$ earns
 \begin{equation}
@@ -156,13 +108,13 @@ Spread over the remaining life of the contract, the daily convergence loss is ro
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=0.9\linewidth]{figs/vxx_vs_vix.pdf}
-  \figplaceholder{5cm}{Figure 2: Split-adjusted VXX price vs.\ VIX over time (log scale for VXX). Data: Yahoo Finance.}
+  % \includegraphics[width=0.9\linewidth]{figures/vixy_vs_vix.pdf}   % made by report/make_discussion_figures.py
+  \figplaceholder{5cm}{Figure 2: VIXY (long short-term VIX-futures ETF, split-adjusted, log scale) vs.\ VIX. Run \texttt{python3.11 report/make\_discussion\_figures.py} on a machine with Yahoo Finance access, then swap this box for the line above.}
   \caption{VXX decays over time despite a mean-reverting VIX. (Replace placeholder with generated plot.)}
   \label{fig:vxx}
 \end{figure}
 
-\subsection{Inverse and leveraged products}
+\subsubsection{Inverse and leveraged products}
 
 Inverse products such as XIV and SVXY take the opposite side: they earn the roll yield in contango but lose when volatility spikes. Because leveraged and inverse products reset their exposure \emph{daily}, their return over several days is path-dependent. If the underlying futures return is $r$ over one day, a $-1\times$ inverse product's net asset value is multiplied by
 \begin{equation}
@@ -173,15 +125,12 @@ A one-day futures rise of $r\geq 100\%$ would therefore wipe the product out ent
 
 There is also a mechanical feedback effect. To restore $-1\times$ exposure at the close after a spike, an inverse product must \emph{buy} VIX futures, which adds to the very rally that caused the losses\verify.
 
-%=====================================================================
-\section{Volmageddon (February 2018)}
-%=====================================================================
-
-\subsection{Background}
+\subsection{Volmageddon (February 2018)}
+\subsubsection{Background}
 
 After a long period of low volatility, with the VIX near 9--12 in late 2017\verify, short-volatility strategies had been extremely profitable and inverse VIX ETPs such as XIV and SVXY held very large assets\verify. This set the stage for a violent reversal.
 
-\subsection{Timeline}
+\subsubsection{Timeline}
 
 \begin{table}[H]
 \centering
@@ -200,7 +149,7 @@ Late Jan.--2 Feb.\ 2018 & Equity sell-off begins after a strong January rally\ve
 \label{tab:timeline}
 \end{table}
 
-\subsection{Why the products broke}
+\subsubsection{Why the products broke}
 
 Three mechanisms combined:
 \begin{enumerate}
@@ -211,28 +160,14 @@ Three mechanisms combined:
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=0.9\linewidth]{figs/volmageddon.pdf}
-  \figplaceholder{5cm}{Figure 3: VIX, front-month VIX future and XIV/SVXY, 1--9 Feb.\ 2018. Data: Cboe / Yahoo Finance.}
-  \caption{Price moves around 5 February 2018. (Replace placeholder with generated plot.)}
+  \includegraphics[width=0.9\linewidth]{figures/volmageddon.pdf}
+  \caption{VIX and the front-month VIX future, 15 January -- 15 March 2018. On 5 February the front-month future rose from 15.6 to 33.2. Data: Yahoo Finance (\texttt{\textasciicircum VIX}), Cboe Futures Exchange settlement prices.}
   \label{fig:volmageddon}
 \end{figure}
 
-\subsection{Aftermath and lessons}
+\subsubsection{Aftermath and lessons}
 
 After the event, regulators and exchanges paid closer attention to leveraged and inverse ETPs, and surviving products were redesigned (for example, SVXY reduced its exposure to $-0.5\times$)\verify. The main lessons are: (i) selling volatility earns a premium but carries severe crash risk; (ii) daily-reset products are path-dependent and unsuitable for buy-and-hold; and (iii) the structure of a product, including issuer risk and termination clauses, matters as much as its underlying exposure.
 
-%=====================================================================
-\section{Link to the Rest of the Report}
-%=====================================================================
-
+\subsection{Link to the Rest of the Report}
 The next sections specify the VIX methodology and futures contract in detail, including the term structure (contango versus backwardation); derive $\VIX^2$ as the fair strike of a 30-day variance swap and quantify the convexity adjustment; and implement the Cboe formula, a Heston simulation and a backtest of a VIX-futures hedge including roll yield.
-
-%=====================================================================
-\begin{thebibliography}{9}
-\bibitem{cboe} Cboe Exchange, Inc. \emph{The Cboe Volatility Index -- VIX: White Paper}. (Add URL and access date.)
-\bibitem{whaley} R.~E.~Whaley (2009). Understanding the VIX. \emph{Journal of Portfolio Management}, 35(3), 98--105.\verify
-\bibitem{vxx} iPath Series~B S\&P~500 VIX Short-Term Futures ETN: prospectus / pricing supplement. (Add issuer and date.)
-\bibitem{xiv} Sources on the February 2018 event (SEC, academic or central-bank notes). (Add.)
-\end{thebibliography}
-
-\end{document}

@@ -1,0 +1,105 @@
+% Main file for the MAT386 VIX group report.
+% Compile from the report/ folder:   latexmk -pdf main.tex
+% Each member edits only their own file in sections/; the shared preamble lives here.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb, amsmath, amsbsy, amsthm, amsfonts}
+\usepackage{enumerate}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% headers
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MAT386H5 -- Fall 2026}
+\rhead{VIX and VIX Derivatives}
+\cfoot{\thepage\ of \pageref{LastPage}}
+
+% shared commands
+\newcommand{\verify}[1][]{\textcolor{red}{\textsuperscript{[verify#1]}}}  % flag claims that still need a source
+\newcommand{\figplaceholder}[2]{\fbox{\parbox[c][#1][c]{0.9\linewidth}{\centering\textit{#2}}}}
+\newcommand{\todo}[1]{\textcolor{red}{\textit{[To do: #1]}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\EQ}{\mathbb{E}^{\mathbb{Q}}}
+\newcommand{\VIX}{\mathrm{VIX}}
+\newcommand{\Kvar}{K_{\mathrm{var}}}
+
+\title{VIX and VIX Derivatives}
+\author{MAT386 Group Project --- Nikita, Tony, Josh, Daniel}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This report studies the Cboe Volatility Index (VIX) and the derivatives written on it. We introduce the VIX as the market's ``fear gauge'' and the products that trade volatility directly, specify the VIX methodology and contracts, derive VIX$^2$ as the fair strike of a 30-day variance swap, and implement the Cboe formula on live S\&P~500 option quotes, matching the official index to within 0.05 points. \todo{one sentence on Heston pricing and the convexity adjustment; one sentence on the hedging backtest result.}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Discussion}
+%=====================================================================
+\input{sections/discussion}
+
+%=====================================================================
+\section{Product specification}
+%=====================================================================
+\todo{Cboe VIX methodology (30-day variance from a strip of S\&P~500 options, interpolated between two maturities); VIX futures (\$1{,}000 multiplier, cash settlement on the Special Opening Quotation); VIX options (\$100 multiplier, European, SOQ settlement); futures term structure (contango vs backwardation). The methodology formula currently sits in Section~1.1.1 and could move here.}
+
+%=====================================================================
+\section{Pricing and hedging}
+%=====================================================================
+\input{sections/vix_derivation}
+\input{sections/pricing_hedging}
+
+%=====================================================================
+\section{Simulation}
+%=====================================================================
+\input{sections/vix_computation}
+
+\subsection{Heston model: VIX futures, VIX calls and the convexity adjustment}
+\todo{Daniel --- Heston simulation, VIX futures curve vs market, VIX call prices, convexity adjustment.}
+
+\subsection{Hedging backtest}
+\todo{Tony --- long VIX-futures hedge of a \$1M SPY portfolio, 2 Jan 2015 -- 3 Nov 2026, roll yield, 2018 and 2020 episodes, hedge size comparison.}
+
+%=====================================================================
+\section{Conclusion}
+%=====================================================================
+\todo{main findings from each section.}
+
+%=====================================================================
+\appendix
+\input{sections/appendix_data_code}
+
+%=====================================================================
+\begin{thebibliography}{99}
+\bibitem{cboewp} Cboe (2019). \emph{Cboe Volatility Index White Paper}. \url{https://www.asx.com.au/content/dam/asx/investors/investment-options/vix/cboe-vix-white-paper.pdf}
+\bibitem{cboemeth} Cboe Global Indices. \emph{Cboe Volatility Index Mathematics Methodology}.
+\bibitem{carrmadan} P.~Carr and D.~Madan (1998). Towards a theory of volatility trading. In R.~Jarrow (ed.), \emph{Volatility: New Estimation Techniques for Pricing Derivatives}, Risk Books.
+\bibitem{ddkz} K.~Demeterfi, E.~Derman, M.~Kamal and J.~Zou (1999). \emph{More than you ever wanted to know about volatility swaps}. Goldman Sachs Quantitative Strategies Research Notes.
+\bibitem{carrwu} P.~Carr and L.~Wu (2009). Variance risk premiums. \emph{Review of Financial Studies}, 22(3).
+\bibitem{whaley} R.~E.~Whaley (2009). Understanding the VIX. \emph{Journal of Portfolio Management}, 35(3), 98--105.\verify
+\bibitem{vxx} iPath Series~B S\&P~500 VIX Short-Term Futures ETN: prospectus / pricing supplement. (Add issuer and date.)
+\bibitem{xiv} Sources on the February 2018 event (SEC, academic or central-bank notes). (Add.)
+\bibitem{hull} J.~C.~Hull (2022). \emph{Options, Futures, and Other Derivatives}, 11th ed. Pearson.
+\bibitem{shreve} S.~E.~Shreve (2004). \emph{Stochastic Calculus for Finance II: Continuous-Time Models}. Springer.
+\bibitem{gatheral} J.~Gatheral (2006). \emph{The Volatility Surface: A Practitioner's Guide}. Wiley.
+\end{thebibliography}
+
+\end{document}

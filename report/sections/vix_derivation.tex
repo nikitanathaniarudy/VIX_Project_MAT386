@@ -1,0 +1,159 @@
+% Pricing & hedging: VIX^2 as the fair strike of a variance swap (Nikita).
+
+\subsection{VIX$^2$ as the fair strike of a variance swap}
+\subsubsection{Setup}
+
+We work under the risk-neutral measure $\mathbb{Q}$ with a constant interest rate $r$ and dividend yield $q$. The S\&P~500 index $S_t$ follows a diffusion whose volatility $\sigma_t$ may itself be random, so the result holds for the Heston model and any other stochastic-volatility model without jumps:
+\begin{equation}
+  \frac{dS_t}{S_t} = (r-q)\,dt + \sigma_t\,dW_t .
+\end{equation}
+The forward price for delivery at $T$ is $F_t = S_t e^{(r-q)(T-t)}$. It has no drift under $\mathbb{Q}$, and $F_T = S_T$:
+\begin{equation}
+  \frac{dF_t}{F_t} = \sigma_t\,dW_t .
+  \label{eq:fwd}
+\end{equation}
+A variance swap with maturity $T$ pays, per unit of notional, the realised variance minus a strike $\Kvar$ agreed today. It costs nothing to enter, so the fair strike is the risk-neutral expectation of realised variance:
+\begin{equation}
+  \text{Payoff} = \frac{1}{T}\int_0^T \sigma_t^2\,dt - \Kvar,
+  \qquad
+  \Kvar = \EQ\!\left[\frac{1}{T}\int_0^T \sigma_t^2\,dt\right].
+\end{equation}
+We show that $\Kvar$ can be written using only today's prices of out-of-the-money options, $Q(K)$, which is a put $P(K)$ for $K<K_0$ and a call $C(K)$ for $K>K_0$:
+\begin{equation}
+  \Kvar = \frac{2e^{rT}}{T}\int_0^{\infty}\frac{Q(K)}{K^2}\,dK
+  \;-\; \frac{2}{T}\left[\frac{F_0}{K_0}-1-\ln\frac{F_0}{K_0}\right]
+  \label{eq:result}
+\end{equation}
+The VIX is the discrete version of \eqref{eq:result} with $T=30$ days, and $\VIX = 100\sqrt{\Kvar}$.
+
+\subsubsection{Step 1: variance is a log contract}
+
+Apply It\^o's lemma to $g(F)=\ln F$, with $g'(F)=1/F$, $g''(F)=-1/F^2$ and $(dF_t)^2=\sigma_t^2F_t^2\,dt$ from \eqref{eq:fwd}:
+\begin{equation}
+  d\ln F_t = \frac{dF_t}{F_t} - \frac{1}{2}\frac{(dF_t)^2}{F_t^2}
+           = \frac{dF_t}{F_t} - \frac{1}{2}\sigma_t^2\,dt .
+\end{equation}
+Integrating from $0$ to $T$ and using $F_T=S_T$,
+\begin{equation}
+  \int_0^T \sigma_t^2\,dt = 2\int_0^T \frac{dF_t}{F_t} \;-\; 2\ln\frac{S_T}{F_0}.
+  \label{eq:decomp}
+\end{equation}
+The stochastic integral $\int_0^T dF_t/F_t=\int_0^T\sigma_t\,dW_t$ has zero expectation under $\mathbb{Q}$, so
+\begin{equation}
+  \Kvar = -\frac{2}{T}\,\EQ\!\left[\ln\frac{S_T}{F_0}\right].
+  \label{eq:logcontract}
+\end{equation}
+Pricing a variance swap is therefore equivalent to pricing a \emph{log contract}, a claim paying $\ln(S_T/F_0)$ at $T$. The path of $\sigma_t$ has dropped out.
+
+\subsubsection{Step 2: replicating the log contract with options}
+
+Any twice-differentiable payoff $f(S_T)$ can be built from a bond, a forward and a strip of out-of-the-money options \cite{carrmadan}. For any reference strike $K_0$,
+\begin{equation}
+\begin{split}
+  f(S_T) = f(K_0) &+ f'(K_0)(S_T-K_0)\\
+  &+ \int_0^{K_0} f''(K)\,(K-S_T)^+\,dK
+  + \int_{K_0}^{\infty} f''(K)\,(S_T-K)^+\,dK .
+\end{split}
+  \label{eq:carrmadan}
+\end{equation}
+\textit{Proof.} Taylor's theorem with integral remainder gives
+$f(S) = f(K_0) + f'(K_0)(S-K_0) + \int_{K_0}^{S} f''(K)(S-K)\,dK$.
+If $S>K_0$ the remainder equals $\int_{K_0}^{\infty} f''(K)(S-K)^+\,dK$, because $(S-K)^+=0$ for $K\ge S$, and the put integral in \eqref{eq:carrmadan} is zero. If $S<K_0$ the remainder equals $\int_{S}^{K_0} f''(K)(K-S)\,dK=\int_0^{K_0} f''(K)(K-S)^+\,dK$, and the call integral is zero. Hence \eqref{eq:carrmadan} holds for every $S$. \hfill$\square$
+
+For $f(S)=\ln S$ we have $f'(K_0)=1/K_0$ and $f''(K)=-1/K^2$. Subtracting $\ln F_0$ from both sides,
+\begin{equation}
+  \ln\frac{S_T}{F_0} = \ln\frac{K_0}{F_0} + \frac{S_T-K_0}{K_0}
+  - \int_0^{K_0}\frac{(K-S_T)^+}{K^2}\,dK
+  - \int_{K_0}^{\infty}\frac{(S_T-K)^+}{K^2}\,dK .
+  \label{eq:logrep}
+\end{equation}
+The log payoff is a constant, plus $1/K_0$ forwards, minus puts below $K_0$ and calls above $K_0$ held in quantity $1/K^2$ per unit of strike. The $1/K^2$ weights are the second derivative of the logarithm.
+
+\subsubsection{Step 3: pricing the replication}
+
+Under $\mathbb{Q}$, $\EQ[S_T]=F_0$ and each option's expected payoff is its price grown at the risk-free rate, $\EQ[(K-S_T)^+]=e^{rT}P(K)$ and $\EQ[(S_T-K)^+]=e^{rT}C(K)$. Taking expectations of \eqref{eq:logrep},
+\begin{equation}
+  \EQ\!\left[\ln\frac{S_T}{F_0}\right] = \ln\frac{K_0}{F_0} + \frac{F_0-K_0}{K_0}
+  - e^{rT}\int_0^{\infty}\frac{Q(K)}{K^2}\,dK .
+\end{equation}
+Substituting into \eqref{eq:logcontract} and using $\ln(K_0/F_0)=-\ln(F_0/K_0)$ gives \eqref{eq:result}. The result is exact under the assumptions above, and every quantity on the right-hand side is observable today: no volatility model enters.
+
+\subsubsection{Step 4: from the integral to the Cboe formula}
+
+Three approximations turn \eqref{eq:result} into the formula Cboe publishes \cite{cboewp,cboemeth}.
+
+\begin{enumerate}
+  \item \textbf{Correction term.} Let $x=F_0/K_0-1$. Since $K_0$ is the listed strike just below $F_0$, $x$ is small ($x\approx 0.0015$ in Cboe's example). Using $\ln(1+x)=x-\tfrac{1}{2}x^2+O(x^3)$,
+  \begin{equation}
+    \frac{2}{T}\bigl[x-\ln(1+x)\bigr] = \frac{1}{T}\left(\frac{F_0}{K_0}-1\right)^2 + O\!\left(\frac{x^3}{T}\right),
+  \end{equation}
+  where the neglected term is of order $10^{-9}$ in the example.
+  \item \textbf{Discrete strikes.} Options trade at listed strikes $K_i$, so the integral becomes a sum with $\Delta K_i=\tfrac{1}{2}(K_{i+1}-K_{i-1})$ (the gap to the single neighbour at the ends). The interval of $K_0$ lies half in the put region and half in the call region, which is why Cboe uses $Q(K_0)=\tfrac{1}{2}\bigl(P(K_0)+C(K_0)\bigr)$. The strip stops after two consecutive zero bids.
+  \item \textbf{Constant 30-day maturity.} Cboe computes $\sigma^2$ for the two expirations that bracket 30 days and interpolates linearly in total variance $T\sigma^2$.
+\end{enumerate}
+The result is, for each expiration,
+\begin{equation}
+  \sigma^2 = \frac{2}{T}\sum_i \frac{\Delta K_i}{K_i^2}\,e^{RT}Q(K_i) - \frac{1}{T}\left(\frac{F}{K_0}-1\right)^2,
+  \qquad F = K^* + e^{RT}\bigl(C(K^*)-P(K^*)\bigr),
+  \label{eq:cboe}
+\end{equation}
+where $K^*$ is the strike minimising $|C(K)-P(K)|$, and
+\begin{equation}
+  \VIX = 100\sqrt{\left\{T_1\sigma_1^2\frac{N_{T_2}-N_{30}}{N_{T_2}-N_{T_1}} + T_2\sigma_2^2\frac{N_{30}-N_{T_1}}{N_{T_2}-N_{T_1}}\right\}\frac{N_{365}}{N_{30}}},
+  \label{eq:interp}
+\end{equation}
+with $N$ denoting times in minutes. Table~\ref{tab:map} maps each term to Cboe's worked example.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Derivation} & \textbf{Cboe formula} & \textbf{Cboe example}\\
+\midrule
+Option strip $\frac{2e^{rT}}{T}\int Q(K)K^{-2}dK$ & $\frac{2}{T}\sum_i \frac{\Delta K_i}{K_i^2}e^{RT}Q(K_i)$ & 0.018495\\[3pt]
+Correction $\frac{2}{T}[x-\ln(1+x)]$ & $\frac{1}{T}(F/K_0-1)^2$ & 0.00003203\\[3pt]
+$\Kvar$ for one expiry & $\sigma_1^2$ & 0.01846292\\[3pt]
+$\sqrt{\Kvar}$ at 30 days & $\VIX/100$ & 0.13685821\\
+\bottomrule
+\end{tabular}
+\caption{Terms of the derivation and their counterparts in the Cboe formula, with the values from Cboe's worked example \cite{cboewp}.}
+\label{tab:map}
+\end{table}
+
+\subsubsection{Interpretation}
+
+\paragraph{The replicating hedge.} By \eqref{eq:decomp},
+\begin{equation}
+  \frac{1}{T}\int_0^T\sigma_t^2\,dt
+  = \underbrace{-\frac{2}{T}\ln\frac{S_T}{F_0}}_{\text{static option strip}}
+  \;+\; \underbrace{\frac{2}{T}\int_0^T\frac{dF_t}{F_t}}_{\text{dynamic futures position}} .
+\end{equation}
+A dealer who sells a variance swap buys the strip of out-of-the-money options in quantity $2/(TK^2)$ per unit of strike and holds $2/(TF_t)$ futures, rebalanced as $F_t$ moves. Futures cost nothing to enter, so the fair strike equals the cost of the option strip. The strip itself is never rebalanced, hence \emph{static} replication \cite{ddkz}.
+
+\paragraph{Why $1/K^2$.} An option earns from volatility through its gamma; its dollar gamma $\tfrac{1}{2}S^2\Gamma$ is concentrated near its strike and scales roughly with $K^2$. Weighting each option by $1/K^2$ makes the strip's total dollar gamma the same at every index level, so the portfolio is exposed to variance alone and not to the level of the index \cite{ddkz}.
+
+\paragraph{Model-free.} The derivation allowed $\sigma_t$ to follow any path, so the VIX reads the market's expected variance directly from option prices without a pricing model, unlike Black--Scholes implied volatility. Because low strikes receive the largest weights and are the most expensive under the volatility skew, out-of-the-money puts dominate the index (Section~\ref{sec:live}).
+
+\paragraph{Link to VIX futures.} The replication prices VIX$^2$, not VIX. Since the square root is concave, Jensen's inequality gives $\EQ[\VIX_T]\le\sqrt{\EQ[\VIX_T^2]}$: a VIX future is worth less than the square root of the forward variance strike. This gap is the convexity adjustment measured in the Heston section.
+
+\subsubsection{Assumptions and where they break}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{@{}p{3.7cm}p{4.5cm}p{5.4cm}@{}}
+\toprule
+\textbf{Assumption} & \textbf{In practice} & \textbf{Effect}\\
+\midrule
+Continuous paths (no jumps) & The index can gap (e.g.\ 5 Feb 2018) & VIX$^2$ differs from the variance-swap strike by a term in the cube of the jump sizes \cite{carrwu}\\
+Continuum of strikes on $(0,\infty)$ & Listed strikes come in steps & Small discretisation error\\
+Every strike has a price & Strip stops after two zero bids & Truncation lowers the VIX slightly, more in stressed markets\\
+Constant $r$ and $q$ & Rates change over 30 days & Negligible at a 30-day horizon\\
+Second-order expansion & Exact term is $x-\ln(1+x)$ & Error of order $x^3$\\
+Linear interpolation in $T\sigma^2$ & Term structure can curve & Small; both expiries are within a week of 30 days\\
+\bottomrule
+\end{tabular}
+\caption{Assumptions behind \eqref{eq:result} and the effect of relaxing them. The middle four are built into the official index itself.}
+\label{tab:assumptions}
+\end{table}
