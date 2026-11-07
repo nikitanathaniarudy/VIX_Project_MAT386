@@ -1,0 +1,128 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper]{geometry}
+
+% math packages
+\usepackage{amssymb, amsmath, amsbsy, amsthm, amsfonts, amscd}
+\usepackage{enumerate}
+\usepackage{array}
+
+% formatting & headers
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\usepackage{lastpage}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MAT386H5 -- Fall 2026}
+\chead{}
+\rhead{VIX Pricing and Hedging Discussion}
+\cfoot{\thepage\ of \pageref{LastPage}}
+    
+% end of setup
+
+\begin{document}
+Derive VIX$^2$ as the fair strike of a 30-day variance swap by static replication with out-of-the-money options ($\frac{1}{K^2}$ weights); Explain why VIX futures differ from spot VIX; Discuss hedging an equity portfolio with VIX futures or calls and the cost of rolling.
+\section{VIX$^2$ Derivation}
+\section{Difference between VIX futures and spot VIX}
+The spot VIX is an index, not a tradable asset. Cboe calculates it from a strip of out-of-the-money S\&P 500 options and it reflects the market's expected 30-day volatility at a given moment. Because it cannot be bought or held directly, investors gain exposure thrrough VIX futures, which settle to the VIX at expiration (the Special Opening Quotation).
+
+The two differ in several important ways. First, futures price the market's expectation of future VIX, not current VIX, so thehy can deviate substantially from spot. Second, futures respond less than one-for-one changes in spot VIX, with sesitivity declining as matruity lengthens, because volatility tends to mean-revert. Third, the term structure is typically in contango during calms markets (futures above spot) and in backwardation during stress (futures below spot). Finally, since no cash-and-carry arbitrage links futures to spot, prices are driven by supply, demand, and risk premia rather than a no-arbitrage relationship, and the futures converge to spot only at expiry.
+
+\section{Hedging an equity portfolio with VIX futures/calls}
+\subsection{What is hedging}
+Hedging means taking a second position whose value tends to move opposite to your main position, so the total is less volatile. Let $P_t$ denote the value of the portfolio and $H_t$ denote the value of the hedge instrument. The hedged position is defined by
+\[
+    \Pi_t = P_t + n H_t
+\]
+where $n$ is the hedge size.
+
+Hedging aims to reduce $\mathrm{Var}(\Delta \Pi)$, not to raise returns; in fact a hedge usually has a negative expected return, which is the cost.
+
+\subsubsection{Hedge ratio}
+Let $\Delta P$ be the portfolio's dollar change and $\Delta F$ is the change in the VIX futures price (index points) over the same period. One contract changes by $1000 \Delta F$ dollars, so the variance-minimizing number of contracts is
+\[
+    n^* = -\frac{\mathrm{Cov}(\Delta P,\,1000\,\Delta F)}{\mathrm{Var}(1000\,\Delta F)}
+        = -\frac{\beta}{1000},
+    \qquad
+    \beta = \frac{\mathrm{Cov}(\Delta P,\Delta F)}{\mathrm{Var}(\Delta F)},
+\]
+estimated from the regression $\Delta P_i = \alpha + \beta\,\Delta F_i + \varepsilon_i$.
+The residual variance is $\mathrm{Var}(\Delta P)(1-R^2)$, where $R^2$ measures hedge
+effectiveness and $1-R^2$ is the fraction of variance left unhedged (basis risk).
+
+\subsection{Why VIX instruments can hedge equities}
+Equity returns and changes in VIX are strongly negatively correlated: When S\&P 500 falls sharply, implied volatility jumps, so $\mathrm{Cov}(\Delta P, \Delta F) < 0$, which gives $n^* > 0$, meaning you go long VIX futures or long VIX calls. The hedge pays off in the states where the portfolio loses, and the relationship is convex: VIX tends to rise more than proportionally in large selloffs.
+
+\subsubsection{VIX futures (long)}
+The protfit and loss of $N$ contracts, each with multiplier 1000, held to expiry $T$, is
+\[
+    \mathrm{P\&L} = 1000 N (\mathrm{VIX}_T - F_0(T))
+\]
+
+Costs nothing upfront, but the loss is symmetric: if VIX falls below $F_0(T)$, you lose
+
+\subsubsection{VIX calls (long)}
+The payoff is
+\[
+    \mathrm{Payoff} = 1000 N (\mathrm{VIX}_T - K)^+
+\]
+and you pay premium $C_0$ upfront. Your worst loss is capped at the premium, and the upside is convex.
+
+
+\subsection{Cost of rolling}
+Futures contract has a fixed expiry, if we want the hedge lasting longer than the contract, we must roll (i.e. sell the expiring contract and buy the next one).
+
+Each roll repeats a pattern:
+\begin{enumerate}
+    \item You buy at $F_t (T_1)$.
+    \item The futures price converges to spot VIX at expiry, $F_{T_1}(T_1) = \mathrm{VIX}_{T_1}$
+    \item You then buy the next contract at $F_{T_1}(T_2)$ and the cycle repeats.
+\end{enumerate}
+($F_t(T_1)$ is the price we can lock in today (time $t$) for the VIX future expiring at $T_1$)
+
+If the curve is in contango (where $F_t(T_2) > F_t(T_1) > \mathrm{VIX}_t$) and spot VIX stays flat, the contract you hold rolls down toward spot and loses value. A rough per-day measure of this decay, with the curve static, is
+\[
+    \text{roll-down per day} \approx \dfrac{F_t(T) - \mathrm{VIX}_t}{T - t}
+\]
+and the rolling long position loses about this amount per day. This loss is called \textbf{negative roll yield}, and over one roll cycle it is roughly the gap between the futures price and spot VIX
+\[
+    \text{cost over one holding period} \approx 1000 N (F_t(T_1) - \mathrm{VIX}_t)
+\]
+
+Note that for VIX future
+\[
+    F_0(T_1) = \mathbb{E}^{\mathbb{Q}}[\mathrm{VIX}_{T_1}]
+\]
+since there is no upfront payment, and for VIX call
+\[
+    C_0 = e^{-rT_1} \mathbb{E}^{\mathbb{Q}}[1000(\mathrm{VIX}_{T_1} - K)^+]
+\]
+
+Here $e^{-rT}$ discounts money received at time $T$ back to today at interest rate $r$, using the same principle as the option pricing.
+
+\subsection{Hedged P\&L}
+Holding $N$ contracts from $t$ to expiry $T$. The futures P\&L can be split into two pieces:
+\[
+    \underbrace{1000 N (\mathrm{VIX}_T - F_t(T))}_{\text{futures P\&L}} = 1000 N\left[\underbrace{(\mathrm{VIX}_T - \mathrm{VIX}_t)}_{\text{the hedge benefit}} - \underbrace{(F_t(T) - \mathrm{VIX}_t)}_{\text{roll cost (contango gap)}}\right]
+\]
+So the hedged portfolio's P\&L is
+\[
+    \Delta\Pi = \Delta P
+    + 1000N\,(\mathrm{VIX}_T - \mathrm{VIX}_t)
+    - 1000N\,\bigl(F_t(T) - \mathrm{VIX}_t\bigr).
+\]
+The second term is the protection from spot VIX rising, and the third term is the
+roll cost from contango.
+
+For calls:
+\[
+    \Delta \Pi = \Delta P + 1000 N (\mathrm{VIX}_T - K)^+ - N C_0
+\]
+where $C_0$ is the premium per contract including the multiplier.
+
+\subsection{Hedging backtest}
+will work with real data
+
+\end{document}
