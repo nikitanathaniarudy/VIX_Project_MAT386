@@ -12,25 +12,25 @@ Under the risk-neutral measure $\mathbb{Q}$ the Heston model lets the variance $
 \end{equation}
 Here $S_t$ is the index level and $r$ is the risk-free rate. $W^1$ and $W^2$ are Brownian motions that drive the index and its variance, and their increments have correlation $\rho$. The parameter $\kappa$ is the speed at which $v_t$ returns to the long run variance $\theta$, and $\sigma$ is the volatility of variance. A negative $\rho$ makes volatility rise when the index falls.
 
-The parameter values are the group's agreed set. They come from Gatheral's textbook \cite{gatheral}, where Heston is fitted to S\&P~500 option prices, and we change only $v_0$ (Table~\ref{tab:hestonparams}). Our prices depend only on $\kappa$, $\theta$, $\sigma$ and $v_0$. The correlation $\rho$ affects the index but not the VIX, which depends on $v_t$ alone (Section~\ref{sec:hestonvix}).
+The values of $\kappa$, $\theta$, $\sigma$ and $\rho$ come from Gatheral's textbook \cite{gatheral}, where Heston is fitted to S\&P~500 option prices. These describe how variance behaves in general. The starting variance $v_0$ describes one particular day, so we set it from the market's VIX on that day (Section~\ref{sec:hestonvix}). Table~\ref{tab:hestonparams} lists all five. Our prices depend only on $\kappa$, $\theta$, $\sigma$ and $v_0$. The correlation $\rho$ affects the index but not the VIX, which depends on $v_t$ alone (Section~\ref{sec:hestonvix}).
 
 The Feller condition $2\kappa\theta \ge \sigma^2$ guarantees that $v_t$ stays strictly positive. Here $2\kappa\theta = 0.094 < \sigma^2 = 0.150$, so the condition fails and $v_t$ can reach zero. This is why the simulation uses full truncation (Section~\ref{sec:hestonsim}).
 
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{@{}llrr@{}}
+\begin{tabular}{@{}llrl@{}}
 \toprule
-\textbf{Parameter} & \textbf{Meaning} & \textbf{Planned} & \textbf{Used}\\
+\textbf{Parameter} & \textbf{Meaning} & \textbf{Value} & \textbf{Source}\\
 \midrule
-$\kappa$ & speed of mean reversion (per year) & 1.3253 & 1.3253\\
-$\theta$ & long run variance (VIX 18.8) & 0.0354 & 0.0354\\
-$\sigma$ & volatility of variance & 0.3877 & 0.3877\\
-$\rho$ & correlation of the two shocks & $-0.7165$ & $-0.7165$ (does not affect VIX)\\
-$v_0$ & variance today & 0.0276 & 0.0438\\
+$\kappa$ & speed of mean reversion (per year) & 1.3253 & Gatheral\\
+$\theta$ & long run variance (VIX 18.8) & 0.0354 & Gatheral\\
+$\sigma$ & volatility of variance & 0.3877 & Gatheral\\
+$\rho$ & correlation of the two shocks & $-0.7165$ & Gatheral (does not affect VIX)\\
+$v_0$ & variance on 3 November 2026 & 0.0438 & matched to VIX of 20.83\\
 \bottomrule
 \end{tabular}
-\caption{Heston parameters. The planned values are from the group's planning document. $\kappa$, $\theta$, $\sigma$ and $\rho$ are Gatheral's \cite[Ch.~3]{gatheral}\verify\ and $v_0 = 0.1661^2$ is the VIX on 4 November 2026 squared. We use $v_0 = 0.0438$, which matches the model's VIX to the market on 3 November 2026 (Section~\ref{sec:hestonvix}).}
+\caption{Heston parameters. Gatheral's values are from \cite[Ch.~3]{gatheral}\verify.}
 \label{tab:hestonparams}
 \end{table}
 
@@ -56,7 +56,6 @@ We compare the model with the futures curve of 3 November 2026, the latest date 
 \[
   v_0 = \theta + \frac{(20.83/100)^2 - \theta}{B} = 0.0438 .
 \]
-The group's planning document had set $v_0 = 0.0276$, the VIX of 4 November squared, which would start the model at a VIX of 16.7 instead of 20.83.
 
 \subsubsection{Simulation}
 \label{sec:hestonsim}

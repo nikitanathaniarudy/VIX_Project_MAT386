@@ -109,7 +109,7 @@ def main():
     v0 = variance_from_vix(spot_vix, kappa, theta)
     print(f"Spot VIX on {CURVE_DATE}: {spot_vix:.2f}")
     print(f"Gatheral: kappa={kappa}, theta={theta}, sigma={sigma}, rho={HESTON_GATHERAL['rho']}")
-    print(f"B = {b_factor(kappa):.4f};  v0 matched to spot VIX = {v0:.4f} (instead of {HESTON_GATHERAL['v0']:.4f})")
+    print(f"B = {b_factor(kappa):.4f};  v0 matched to spot VIX = {v0:.4f}")
     print(f"Feller: 2*kappa*theta = {2 * kappa * theta:.4f} vs sigma^2 = {sigma ** 2:.4f}")
 
     v = simulate_variance(v0, kappa, theta, sigma, HESTON_N_PATHS, MAX_DAYS, RANDOM_SEED)
