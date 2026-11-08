@@ -87,7 +87,7 @@ Three approximations turn \eqref{eq:result} into the formula Cboe publishes \cit
   \begin{equation}
     \frac{2}{T}\bigl[x-\ln(1+x)\bigr] = \frac{1}{T}\left(\frac{F_0}{K_0}-1\right)^2 + O\!\left(\frac{x^3}{T}\right),
   \end{equation}
-  where the neglected term is of order $10^{-9}$ in the example.
+  where the neglected term is about $3\times10^{-8}$ in the example.
   \item \textbf{Discrete strikes.} Options trade at listed strikes $K_i$, so the integral becomes a sum with $\Delta K_i=\tfrac{1}{2}(K_{i+1}-K_{i-1})$ (the gap to the single neighbour at the ends). The interval of $K_0$ lies half in the put region and half in the call region, which is why Cboe uses $Q(K_0)=\tfrac{1}{2}\bigl(P(K_0)+C(K_0)\bigr)$. The strip stops after two consecutive zero bids.
   \item \textbf{Constant 30-day maturity.} Cboe computes $\sigma^2$ for the two expirations that bracket 30 days and interpolates linearly in total variance $T\sigma^2$.
 \end{enumerate}
