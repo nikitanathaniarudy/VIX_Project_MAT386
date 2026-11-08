@@ -45,7 +45,7 @@
 
 \begin{abstract}
 \noindent
-This report studies the Cboe Volatility Index (VIX) and the derivatives written on it. We introduce the VIX as the market's ``fear gauge'' and the products that trade volatility directly, specify the VIX methodology and contracts, derive VIX$^2$ as the fair strike of a 30-day variance swap, and implement the Cboe formula on live S\&P~500 option quotes, matching the official index to within 0.05 points. \todo{one sentence on Heston pricing and the convexity adjustment; one sentence on the hedging backtest result.}
+This report studies the Cboe Volatility Index (VIX) and the derivatives written on it. We introduce the VIX as the market's ``fear gauge'' and the products that trade volatility directly, specify the VIX methodology and contracts, derive VIX$^2$ as the fair strike of a 30-day variance swap, and implement the Cboe formula on live S\&P~500 option quotes, matching the official index to within 0.05 points. Under a Heston model started at the spot VIX, we price VIX futures and calls by Monte Carlo and show that the convexity adjustment, the gap between the square root of forward variance and the VIX future, grows from 0.6 points at one month to 2.3 points at six months; the one-factor model cannot reproduce the shape of the market futures curve. Finally, a 2015--2026 backtest of a rolling, variance-minimising VIX-futures hedge on a \$1M S\&P~500 portfolio cuts the loss in the COVID crash from 33\% to under 2\%, but the cost of rolling futures in contango lowers the annual return from 13.5\% to 8--9\%.
 \end{abstract}
 
 \tableofcontents
@@ -81,7 +81,15 @@ This report studies the Cboe Volatility Index (VIX) and the derivatives written 
 %=====================================================================
 \section{Conclusion}
 %=====================================================================
-\todo{main findings from each section.}
+\paragraph{The index and its products.} The VIX measures the market's expected S\&P~500 volatility over the next 30 days, read from option prices rather than past returns. It rises sharply when equities fall, which makes it the market's ``fear gauge'' and a natural hedge. Because the index itself cannot be traded, exposure comes through futures, options and exchange-traded products. These products track futures, not spot, so long-volatility ETPs such as VXX lose value steadily in contango, and the daily-reset inverse products that profited from that decay were wiped out in a single day in February 2018.
+
+\paragraph{Pricing.} Using It\^o's lemma and the Carr--Madan replication of the log contract, we showed that $\VIX^2$ is the fair strike of a 30-day variance swap and that it can be read from a strip of out-of-the-money options weighted by $1/K^2$, with no volatility model. The Cboe formula is the discrete version of this result. Our implementation reproduces every intermediate value of Cboe's worked example and computes a live VIX of 22.49 against the official 22.54, and the replication recovers the true expected variance under both Black--Scholes and Heston. On the live data about three quarters of $\VIX^2$ comes from out-of-the-money puts, so the VIX is largely a price of crash insurance.
+
+\paragraph{Futures versus spot.} A VIX future is the risk-neutral expectation of the VIX at expiry, not today's VIX, and because the square root is concave it lies below the square root of forward variance. Under Heston this convexity adjustment is 0.62 points at 30 days, 1.58 at 91 days and 2.28 at 180 days. With parameters fitted to S\&P~500 options, the model is 0.5 points too high at the front of the 3~November~2026 curve and 2.0 points too low at 106 days: a single variance factor can only move monotonically from today's VIX toward its long-run level.
+
+\paragraph{Hedging.} Equity returns and VIX futures are strongly negatively correlated, so a long VIX-futures position reduces portfolio risk. In our 2015--2026 backtest the rolling variance-minimising hedge reduced the variance of daily returns by 14\% (252-day estimation window) and 31\% (504-day window), turned a 19\% loss in the first quarter of 2020 into a 13--14\% gain, and limited the COVID-crash loss to under 2\% against 33\% unhedged. The price is the roll cost: futures in contango converge down to spot, which cost about \$180{,}000 a year, or 12\% of the average portfolio value, and cut the annual return from 13.5\% to 8.0\% (252-day window) and 9.4\% (504-day window). With the shorter window the hedge also deepened the 2022--2023 drawdown. VIX futures are therefore effective crisis insurance but an expensive permanent hedge.
+
+\paragraph{Limitations.} Our option quotes are 15-minute delayed Yahoo Finance data, and our rate curve uses two points rather than Cboe's spline. The Heston parameters were not calibrated to VIX futures or options, and only the starting variance was fitted. The backtest uses daily settlement prices and ignores commissions and bid--ask spreads, which would add to the cost of rolling.
 
 %=====================================================================
 \appendix

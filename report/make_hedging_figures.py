@@ -130,7 +130,7 @@ def main():
     a1.set_yticks([1.0, 1.5, 2.0, 3.0, 4.0])
     a1.set_yticklabels(["1.0", "1.5", "2.0", "3.0", "4.0"])
     a1.yaxis.set_minor_formatter(mtick.NullFormatter())
-    a1.legend(frameon=False, fontsize=8, loc="upper left")
+    a1.legend(frameon=False, fontsize=8, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=3)
     tidy(a1)
     mark_events(a1, labels=True)
 
