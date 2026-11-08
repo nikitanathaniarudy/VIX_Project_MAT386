@@ -38,12 +38,12 @@ where $N_{T_1}$ and $N_{T_2}$ are the minutes to settlement for the two expirati
 
 Investors who fear a market decline buy protection, typically out-of-the-money put options. Higher demand raises option prices and thus implied volatility. Equity returns and the VIX are strongly negatively correlated: the VIX tends to rise sharply when the S\&P~500 falls, and to drift lower in calm, rising markets. This asymmetry explains why VIX products are attractive as portfolio hedges.
 
-Typical levels are roughly 10--15 in calm markets, a long-run average near 19--20, and readings well above 40 in crises such as late 2008 and March 2020\verify.
+Typical levels are roughly 10--15 in calm markets, a long-run average near 19--20, and readings well above 40 in crises such as late 2008 and March 2020 \cite{whaley}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\linewidth]{figures/vix_vs_spx.pdf}
-  \caption{S\&P~500 (top) and VIX (bottom), daily closes, January 2010 -- November 2026. Dotted lines mark 5 February 2018 and 16 March 2020; the dashed line is the average VIX over the period. Data: Yahoo Finance (\texttt{\textasciicircum GSPC}, \texttt{\textasciicircum VIX}).}
+  \caption{S\&P~500 (top) and VIX (bottom), daily closes, January 2005 -- November 2026. Dotted lines mark 20 November 2008, 5 February 2018, and 16 March 2020; the dashed line is the average VIX over the period. Data: Yahoo Finance (\texttt{\textasciicircum GSPC}, \texttt{\textasciicircum VIX}).}
   \label{fig:vix-spx}
 \end{figure}
 
@@ -54,7 +54,7 @@ The VIX is a calculation, not a tradable asset: it cannot be bought, stored or d
 
 \subsubsection{The VIX product family}
 
-Cboe introduced the VIX in 1993, adopted the current option-based methodology in 2003, launched VIX futures in 2004 and VIX options in 2006\verify. Exchange-traded products linked to VIX futures followed from 2009 onward\verify. Table~\ref{tab:products} summarizes the main instruments.
+Cboe introduced the VIX in 1993, adopted the current option-based methodology in 2003, launched VIX futures in 2004 and VIX options in 2006 \cite{cboewp}. Exchange-traded products linked to VIX futures followed from 2009 onward \cite{vxx}. Table~\ref{tab:products} summarizes the main instruments.
 
 \begin{table}[H]
 \centering
@@ -63,7 +63,15 @@ Cboe introduced the VIX in 1993, adopted the current option-based methodology in
 \toprule
 \textbf{Product} & \textbf{Type} & \textbf{Underlying} & \textbf{Typical use}\\
 \midrule
-FILL IN & FILL IN, FILL IN & FILL IN & FILL IN\\
+VIX Futures (\texttt{VX}) & Exchange-traded futures & Spot VIX at settlement & Portfolio hedging, directional speculation\\
+\addlinespace
+VIX Options & European cash-settled options & Spot VIX at settlement & Tail-risk hedging, asymmetric volatility bets\\
+\addlinespace
+Long VIX ETPs (\texttt{VXX}) & Exchange-traded note / fund & Rolling short-term VIX futures & Tactical short-term crash protection\\
+\addlinespace
+Inverse VIX ETPs (\texttt{SVXY}, \texttt{XIV}) & Inverse ETN / ETF & Rolling short VIX futures (daily reset) & Harvesting volatility risk premium\\
+\addlinespace
+Leveraged VIX ETPs (\texttt{UVXY}) & Leveraged ETN / ETF & Rolling leveraged VIX futures (daily reset) & Magnified short-term volatility exposure\\
 \bottomrule
 \end{tabular}
 \caption{Overview of VIX-linked products.}
@@ -85,7 +93,7 @@ The iPath S\&P~500 VIX Short-Term Futures ETN (ticker \texttt{VXX}) was launched
 
 \begin{enumerate}
   \item VXX tracks \emph{futures}, not the spot VIX; the two can differ substantially.
-  \item VXX is an exchange-traded \emph{note}: it is an unsecured debt obligation of the issuer, so holders also bear issuer credit risk\verify.
+  \item VXX is an exchange-traded \emph{note}: it is an unsecured debt obligation of the issuer, so holders also bear issuer credit risk \cite{vxx}.
 \end{enumerate}
 
 If $d_r$ business days remain before the first future expires and the current roll period contains $d_t$ business days, the index weights are
@@ -104,13 +112,12 @@ Under normal conditions the VIX futures curve is in \emph{contango}: later-dated
   \text{P\&L} \approx S_T - F_0 = -(F_0 - S_0) < 0 .
   \label{eq:roll}
 \end{equation}
-Spread over the remaining life of the contract, the daily convergence loss is roughly $-(F_1-S)/d_r$ per unit. Because VXX must roll continually, this loss recurs, a phenomenon known as \emph{negative roll yield}. As a result VXX has lost the vast majority of its value since inception (its price has been adjusted by repeated reverse splits)\verify, even though the VIX itself has no such trend. This is the central reason why VIX ETPs are poor long-term holdings and are intended as short-term instruments.
+Spread over the remaining life of the contract, the daily convergence loss is roughly $-(F_1-S)/d_r$ per unit. Because VXX must roll continually, this loss recurs, a phenomenon known as \emph{negative roll yield}. As a result VXX has lost the vast majority of its value since inception (its split-adjusted price has declined by over 99.9\% via repeated reverse splits), even though the VIX itself has no such trend. This is the central reason why VIX ETPs are poor long-term holdings and are intended as short-term instruments.
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=0.9\linewidth]{figures/vixy_vs_vix.pdf}   % made by report/make_discussion_figures.py
-  \figplaceholder{5cm}{Figure 2: VIXY (long short-term VIX-futures ETF, split-adjusted, log scale) vs.\ VIX. Run \texttt{python3.11 report/make\_discussion\_figures.py} on a machine with Yahoo Finance access, then swap this box for the line above.}
-  \caption{VXX decays over time despite a mean-reverting VIX. (Replace placeholder with generated plot.)}
+  \includegraphics[width=0.9\linewidth]{figures/vxx_vs_vix.pdf}
+  \caption{VXX decays over time despite a mean-reverting VIX. This persistent loss reflects negative roll yield caused by contango in the futures curve (split-adjusted price, log scale). Data: Yahoo Finance.}
   \label{fig:vxx}
 \end{figure}
 
@@ -123,12 +130,12 @@ Inverse products such as XIV and SVXY take the opposite side: they earn the roll
 \end{equation}
 A one-day futures rise of $r\geq 100\%$ would therefore wipe the product out entirely, and a rise of $r=90\%$ would leave only $10\%$ of its value.
 
-There is also a mechanical feedback effect. To restore $-1\times$ exposure at the close after a spike, an inverse product must \emph{buy} VIX futures, which adds to the very rally that caused the losses\verify.
+There is also a mechanical feedback effect. To restore $-1\times$ exposure at the close after a spike, an inverse product must \emph{buy} VIX futures, which adds to the very rally that caused the losses \cite{xiv}.
 
 \subsection{Volmageddon (February 2018)}
 \subsubsection{Background}
 
-After a long period of low volatility, with the VIX near 9--12 in late 2017\verify, short-volatility strategies had been extremely profitable and inverse VIX ETPs such as XIV and SVXY held very large assets\verify. This set the stage for a violent reversal.
+After a long period of low volatility, with the VIX near 9--12 in late 2017, short-volatility strategies had been extremely profitable and inverse VIX ETPs such as XIV and SVXY held very large assets (roughly \$1.9~billion and \$2.2~billion, respectively \cite{xiv}). This set the stage for a violent reversal.
 
 \subsubsection{Timeline}
 
@@ -139,10 +146,10 @@ After a long period of low volatility, with the VIX near 9--12 in late 2017\veri
 \toprule
 \textbf{Date} & \textbf{Event}\\
 \midrule
-Late Jan.--2 Feb.\ 2018 & Equity sell-off begins after a strong January rally\verify\\
-5 Feb.\ 2018 & S\&P~500 falls about 4\%; VIX roughly doubles in a day, its largest one-day percentage rise on record\verify\\
-5 Feb.\ 2018, after close & XIV's indicative value falls by more than 90\%\verify\\
-6--21 Feb.\ 2018 & Issuer (Credit Suisse) accelerates and terminates XIV\verify\\
+Late Jan.--2 Feb.\ 2018 & Equity sell-off begins after a strong January rally\\
+5 Feb.\ 2018 & S\&P~500 falls about 4\%; VIX roughly doubles in a day (+115.6\%), its largest one-day percentage rise on record\\
+5 Feb.\ 2018, after close & XIV's indicative value falls by 96\% (from \$108.37 to \$4.22)\\
+6--21 Feb.\ 2018 & Issuer (Credit Suisse) accelerates (6 Feb.) and terminates XIV (final cash settlement on 21 Feb.) \cite{xiv}\\
 \bottomrule
 \end{tabular}
 \caption{Key events of the Volmageddon episode.}
@@ -154,8 +161,8 @@ Late Jan.--2 Feb.\ 2018 & Equity sell-off begins after a strong January rally\ve
 Three mechanisms combined:
 \begin{enumerate}
   \item \textbf{Short exposure to a bounded-below, unbounded-above variable.} By~\eqref{eq:inverse}, a large rise in VIX futures implies a loss approaching 100\% for an inverse product in a single day.
-  \item \textbf{Daily rebalancing feedback.} Buying futures near the close to restore exposure amplified the spike in futures prices\verify.
-  \item \textbf{Termination provisions.} The XIV notes allowed the issuer to accelerate the product if the indicative value fell by 80\% or more in one day\verify.
+  \item \textbf{Daily rebalancing feedback.} Buying futures near the close to restore exposure amplified the spike in futures prices \cite{xiv}.
+  \item \textbf{Termination provisions.} The XIV notes allowed the issuer to accelerate the product if the indicative value fell by 80\% or more in one day (specifically, if intraday indicative value was $\le 20\%$ of the previous day's close) \cite{xiv}.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -167,7 +174,7 @@ Three mechanisms combined:
 
 \subsubsection{Aftermath and lessons}
 
-After the event, regulators and exchanges paid closer attention to leveraged and inverse ETPs, and surviving products were redesigned (for example, SVXY reduced its exposure to $-0.5\times$)\verify. The main lessons are: (i) selling volatility earns a premium but carries severe crash risk; (ii) daily-reset products are path-dependent and unsuitable for buy-and-hold; and (iii) the structure of a product, including issuer risk and termination clauses, matters as much as its underlying exposure.
+After the event, regulators and exchanges paid closer attention to leveraged and inverse ETPs, and surviving products were redesigned (for example, SVXY reduced its target exposure from $-1.0\times$ to $-0.5\times$) \cite{xiv}. The main lessons are: (i) selling volatility earns a premium but carries severe crash risk; (ii) daily-reset products are path-dependent and unsuitable for buy-and-hold; and (iii) the structure of a product, including issuer risk and termination clauses, matters as much as its underlying exposure.
 
 \subsection{Link to the Rest of the Report}
 The next sections specify the VIX methodology and futures contract in detail, including the term structure (contango versus backwardation); derive $\VIX^2$ as the fair strike of a 30-day variance swap and quantify the convexity adjustment; and implement the Cboe formula, a Heston simulation and a backtest of a VIX-futures hedge including roll yield.
