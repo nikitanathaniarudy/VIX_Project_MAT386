@@ -1,0 +1,18 @@
+# Mac
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# LaTeX build files (main.pdf is kept)
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.synctex.gz
+*.nav
+*.snm
