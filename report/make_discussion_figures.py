@@ -73,62 +73,89 @@ fm = pd.read_csv(DATA / "vix_front_month.csv", index_col=0, parse_dates=True)
 etp_path = DATA / "etp_history.csv"
 etp = pd.read_csv(etp_path, index_col=0, parse_dates=True) if etp_path.exists() else None
 
-# ---------------------------------------------------------------- Figure 1
-spx, vix = h["SPX"].dropna(), h["VIX"].dropna()
-fig, (a1, a2) = plt.subplots(2, 1, figsize=(6.8, 4.8), sharex=True, gridspec_kw={"height_ratios": [1, 1.15]})
-a1.plot(spx.index, spx, color=NAVY, lw=1.0)
-a1.set_ylabel("S&P 500")
-a1.yaxis.set_major_formatter(mtick.StrMethodFormatter("{x:,.0f}"))
-a2.plot(vix.index, vix, color=RED, lw=0.7)
-a2.axhline(vix.mean(), color=MUTED, lw=0.9, ls="--", label=f"average VIX ({vix.mean():.1f})")
-a2.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.42, 1.0))
-a2.set_ylabel("VIX")
-a2.set_ylim(0, 100)
-events = [("2008-11-20", "Nov 2008\nfinancial crisis", -6, "right"),
-          ("2018-02-05", "Feb 2018\nVolmageddon", -6, "right"),
-          ("2020-03-16", "Mar 2020\nCOVID", 6, "left")]
-for d, lab, dx, ha in events:
-    t = pd.Timestamp(d)
-    for ax in (a1, a2):
-        ax.axvline(t, color=MUTED, lw=0.7, ls=":")
-    peak = vix.loc[t - pd.Timedelta(days=5): t + pd.Timedelta(days=5)].max()
-    y = max(peak, 45) + 4
-    a2.annotate(f"{lab}\n(VIX {peak:.1f})" if peak > 50 else lab, xy=(t, y), xytext=(dx, 0),
-                textcoords="offset points", fontsize=8, color=INK, ha=ha, va="center")
-for ax in (a1, a2):
-    tidy(ax)
-a2.xaxis.set_major_locator(mdates.YearLocator(3, month=1, day=1))
-a2.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-a2.set_xlim(pd.Timestamp("2005-01-01"), vix.index[-1] + pd.Timedelta(days=60))
-fig.align_ylabels()
-fig.tight_layout()
-save(fig, "vix_vs_spx")
+# ---------------------------------------------------------------- Figures 1 and 2 (Josh's design)
+# Same layout, colours, titles and labels as Josh's originals; only the label positions differ,
+# so that no text overlaps the title, the lines or the panel borders.
+JOSH = {"font.family": "DejaVu Sans", "font.size": 9, "axes.edgecolor": "#475569",
+        "axes.labelcolor": "#0b0b0b", "xtick.color": "#0b0b0b", "ytick.color": "#0b0b0b"}
+J_NAVY, J_RED, J_BLUE, J_LINERED = "#1e3a8a", "#b91c1c", "#4338ca", "#dc2626"
+BOX_RED = dict(boxstyle="round,pad=0.25", fc="#fdecec", ec=J_LINERED, lw=0.7)
+BOX_GREY = dict(boxstyle="round,pad=0.3", fc="white", ec="#94a3b8", lw=0.8)
+BOX_BLUE = dict(boxstyle="round,pad=0.35", fc="#eef0ff", ec="#6366f1", lw=0.8)
 
-# ---------------------------------------------------------------- Figure 2
-v = h["VXX"].dropna()
-vx = h["VIX"].loc[v.index[0]:].dropna()
-fig, (a1, a2) = plt.subplots(2, 1, figsize=(6.8, 4.6), sharex=True, gridspec_kw={"height_ratios": [1.3, 1]})
-a1.plot(v.index, v, color=BLUE, lw=1.1)
-a1.set_yscale("log")
-a1.yaxis.set_major_formatter(mtick.FuncFormatter(lambda x, _: f"\\${x:,.0f}"))
-a1.set_ylabel("VXX price\n(split-adjusted, log scale)")
-peak_day = v.idxmax()
-a1.annotate(f"COVID spike, {peak_day:%d %b %Y}: \\${v.max():,.0f}", xy=(peak_day, v.max()), xytext=(10, -2),
-            textcoords="offset points", fontsize=8, color=INK, va="top")
-loss = 1 - v.iloc[-1] / v.iloc[0]
-a1.text(0.03, 0.06, f"{v.index[0]:%b %Y}: \\${v.iloc[0]:,.0f}   →   {v.index[-1]:%b %Y}: \\${v.iloc[-1]:,.2f}"
-        f"   (−{loss:.1%})", transform=a1.transAxes, fontsize=8.5, color=INK)
-a2.plot(vx.index, vx, color=RED, lw=0.8)
-a2.axhline(vx.mean(), color=MUTED, lw=0.9, ls="--", label=f"average VIX ({vx.mean():.1f})")
-a2.legend(frameon=False, fontsize=8, loc="upper right")
-a2.set_ylabel("VIX")
-for ax in (a1, a2):
-    tidy(ax)
-a2.xaxis.set_major_locator(mdates.YearLocator(1))
-a2.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-fig.align_ylabels()
-fig.tight_layout()
-save(fig, "vxx_vs_vix")
+
+def josh_grid(ax):
+    ax.grid(True, which="major", color="#e5e7eb", lw=0.5, ls="--")
+
+
+with plt.rc_context(JOSH):
+    # ------------------------------------------------------------ Figure 1
+    spx, vix = h["SPX"].dropna(), h["VIX"].dropna()
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(7.2, 4.6), sharex=True)
+    a1.plot(spx.index, spx, color=J_NAVY, lw=1.0, label="S&P 500 Index (SPX)")
+    a1.set_ylabel("S&P 500 Level")
+    a1.legend(loc="upper left", fontsize=8)
+    a1.set_title("S&P 500 Index and Cboe Volatility Index (VIX), 2005–Present", fontsize=10, fontweight="bold")
+    a2.plot(vix.index, vix, color=J_RED, lw=0.7, label="Cboe VIX")
+    a2.axhline(vix.mean(), color="#475569", lw=0.9, ls=":", label=f"Long-run Mean (~{vix.mean():.1f})")
+    a2.set_ylabel("VIX Index Points")
+    a2.set_ylim(0, 112)                      # headroom so the labels sit inside the panel
+    a2.legend(loc="upper center", bbox_to_anchor=(0.40, 1.0), fontsize=8)
+    events = [("2008-11-20", "2008 GFC", 97), ("2018-02-05", "Feb 2018\n'Volmageddon'", 62),
+              ("2020-03-16", "Mar 2020 COVID", 97)]
+    for d, lab, ybox in events:
+        t = pd.Timestamp(d)
+        for ax in (a1, a2):
+            ax.axvline(t, color=J_LINERED, lw=0.7, ls="--", alpha=0.7)
+        peak = vix.loc[t - pd.Timedelta(days=5): t + pd.Timedelta(days=5)].max()
+        text = f"{lab}\n(VIX: {peak:.1f})" if peak > 50 else lab
+        a2.annotate(text, xy=(t, peak), xytext=(t, ybox), ha="center", va="center", fontsize=7,
+                    fontweight="bold", bbox=BOX_RED,
+                    arrowprops=dict(arrowstyle="->", color=J_LINERED, lw=0.7, shrinkA=0, shrinkB=1))
+    for ax in (a1, a2):
+        josh_grid(ax)
+    a2.xaxis.set_major_locator(mdates.YearLocator(3, month=1, day=1))
+    a2.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    a2.set_xlim(spx.index[0], spx.index[-1])
+    fig.align_ylabels()
+    fig.tight_layout()
+    save(fig, "vix_vs_spx")
+
+    # ------------------------------------------------------------ Figure 2
+    v = h["VXX"].dropna()
+    vx = h["VIX"].loc[v.index[0]:].dropna()
+    fig, ax1 = plt.subplots(figsize=(8.0, 4.2))
+    ax2 = ax1.twinx()
+    ax1.plot(v.index, v, color=J_BLUE, lw=1.4, label="VXX (Split-Adj. Price, Log Scale)", zorder=3)
+    ax1.set_yscale("log")
+    ax1.set_ylim(v.min() * 0.7, v.max() * 3.5)   # headroom above the COVID spike for its label
+    ax1.set_ylabel("VXX Price (USD, Log Scale)", color=J_BLUE, fontweight="bold")
+    ax1.tick_params(axis="y", colors=J_BLUE)
+    ax2.plot(vx.index, vx, color=J_LINERED, lw=0.9, alpha=0.75, label="Spot VIX (Linear Scale)")
+    ax2.set_ylim(0, 90)
+    ax2.set_ylabel("Spot VIX Index Level", color=J_LINERED, fontweight="bold")
+    ax2.tick_params(axis="y", colors=J_LINERED)
+    ax1.set_zorder(ax2.get_zorder() + 1)
+    ax1.patch.set_visible(False)
+    ax1.set_title("VXX Structural Decay vs. Mean-Reverting Spot VIX (2018–Present)", fontsize=11,
+                  fontweight="bold")
+    peak_day = v.idxmax()
+    ax1.annotate(f"COVID Spike\n(\\${v.max():,.0f})", xy=(peak_day, v.max()), xytext=(28, 4),
+                 textcoords="offset points", ha="left", va="center", fontsize=8, bbox=BOX_GREY,
+                 arrowprops=dict(arrowstyle="->", color="#475569", lw=0.8))
+    loss = v.iloc[-1] / v.iloc[0] - 1
+    ax1.annotate(f"{v.index[0]:%b %Y}: \\${v.iloc[0]:,.0f}\n{v.index[-1]:%b %Y}: \\${v.iloc[-1]:.2f}\n"
+                 f"Total Return: {loss:.1%}", xy=(v.index[-1], v.iloc[-1]), xytext=(0.80, 0.69),
+                 textcoords="axes fraction", ha="center", va="center", fontsize=8, bbox=BOX_BLUE,
+                 arrowprops=dict(arrowstyle="->", color=J_BLUE, lw=0.8))
+    lines = ax1.get_lines()[:1] + ax2.get_lines()[:1]
+    ax1.legend(lines, [l.get_label() for l in lines], loc="upper right", fontsize=8)
+    josh_grid(ax1)
+    ax1.xaxis.set_major_locator(mdates.YearLocator(1))
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    ax1.set_xlim(v.index[0], v.index[-1] + pd.Timedelta(days=20))
+    fig.tight_layout()
+    save(fig, "vxx_vs_vix")
 
 # ---------------------------------------------------------------- Figure 3
 start, end = "2018-01-15", "2018-03-15"
