@@ -99,7 +99,7 @@ if etp is not None and "VIXY" in etp:
     a2.plot(vix.index, vix, color=ORANGE, lw=1.0)
     a2.set_ylabel("VIX")
     loss = 1 - v.iloc[-1] / v.iloc[0]
-    a1.text(0.98, 0.9, f"{loss:.1%} lost since {v.index[0]:%b %Y}", transform=a1.transAxes, ha="right", fontsize=9, color=INK)
+    a1.text(0.98, 0.9, f"down {loss:.3%} since {v.index[0]:%b %Y}", transform=a1.transAxes, ha="right", fontsize=9, color=INK)
     for ax in (a1, a2):
         tidy(ax)
     a2.xaxis.set_major_locator(mdates.YearLocator(2))
