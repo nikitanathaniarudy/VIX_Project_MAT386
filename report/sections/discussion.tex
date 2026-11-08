@@ -43,7 +43,7 @@ Typical levels are roughly 10--15 in calm markets, a long-run average near 19--2
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\linewidth]{figures/vix_vs_spx.pdf}
-  \caption{S\&P~500 (top) and VIX (bottom), daily closes, January 2010 -- November 2026. Dotted lines mark 5 February 2018 and 16 March 2020; the dashed line is the average VIX over the period. Data: Yahoo Finance (\texttt{\textasciicircum GSPC}, \texttt{\textasciicircum VIX}).}
+  \caption{S\&P~500 (top) and VIX (bottom), daily closes, January 2005 -- November 2026. Dotted lines mark 20 November 2008, 5 February 2018, and 16 March 2020; the dashed line is the average VIX over the period. Data: Yahoo Finance (\texttt{\textasciicircum GSPC}, \texttt{\textasciicircum VIX}).}
   \label{fig:vix-spx}
 \end{figure}
 
@@ -63,7 +63,15 @@ Cboe introduced the VIX in 1993, adopted the current option-based methodology in
 \toprule
 \textbf{Product} & \textbf{Type} & \textbf{Underlying} & \textbf{Typical use}\\
 \midrule
-FILL IN & FILL IN, FILL IN & FILL IN & FILL IN\\
+VIX Futures (\texttt{VX}) & Exchange-traded futures & Spot VIX at settlement & Portfolio hedging, directional speculation\\
+\addlinespace
+VIX Options & European cash-settled options & Spot VIX at settlement & Tail-risk hedging, asymmetric volatility bets\\
+\addlinespace
+Long VIX ETPs (\texttt{VXX}) & Exchange-traded note / fund & Rolling short-term VIX futures & Tactical short-term crash protection\\
+\addlinespace
+Inverse VIX ETPs (\texttt{SVXY}, \texttt{XIV}) & Inverse ETN / ETF & Rolling short VIX futures (daily reset) & Harvesting volatility risk premium\\
+\addlinespace
+Leveraged VIX ETPs (\texttt{UVXY}) & Leveraged ETN / ETF & Rolling leveraged VIX futures (daily reset) & Magnified short-term volatility exposure\\
 \bottomrule
 \end{tabular}
 \caption{Overview of VIX-linked products.}
@@ -108,9 +116,8 @@ Spread over the remaining life of the contract, the daily convergence loss is ro
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=0.9\linewidth]{figures/vixy_vs_vix.pdf}   % made by report/make_discussion_figures.py
-  \figplaceholder{5cm}{Figure 2: VIXY (long short-term VIX-futures ETF, split-adjusted, log scale) vs.\ VIX. Run \texttt{python3.11 report/make\_discussion\_figures.py} on a machine with Yahoo Finance access, then swap this box for the line above.}
-  \caption{VXX decays over time despite a mean-reverting VIX. (Replace placeholder with generated plot.)}
+  \includegraphics[width=0.9\linewidth]{figures/vxx_vs_vix.pdf}
+  \caption{VXX decays over time despite a mean-reverting VIX. This persistent loss reflects negative roll yield caused by contango in the futures curve (split-adjusted price, log scale). Data: Yahoo Finance.}
   \label{fig:vxx}
 \end{figure}
 
