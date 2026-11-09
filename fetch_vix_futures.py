@@ -18,9 +18,9 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-# Contract months to download: Jan 2015 through Feb 2027
+# Contract months to download: Jan 2015 through Apr 2027
 FIRST_MONTH = (2015, 1)
-LAST_MONTH = (2027, 2)
+LAST_MONTH = (2027, 4)
 
 OUT_DIR = Path("data")
 RAW_DIR = OUT_DIR / "vix_futures" / "raw"
