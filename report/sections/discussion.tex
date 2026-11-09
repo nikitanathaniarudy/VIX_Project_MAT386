@@ -130,12 +130,12 @@ Inverse products such as XIV and SVXY take the opposite side: they earn the roll
 \end{equation}
 A one-day futures rise of $r\geq 100\%$ would therefore wipe the product out entirely, and a rise of $r=90\%$ would leave only $10\%$ of its value.
 
-There is also a mechanical feedback effect. To restore $-1\times$ exposure at the close after a spike, an inverse product must \emph{buy} VIX futures, which adds to the very rally that caused the losses \cite{xiv}.
+There is also a mechanical feedback effect. To restore $-1\times$ exposure at the close after a spike, an inverse product must \emph{buy} VIX futures, which adds to the very rally that caused the losses \cite{augustin}.
 
 \subsection{Volmageddon (February 2018)}
 \subsubsection{Background}
 
-After a long period of low volatility, with the VIX near 9--12 in late 2017, short-volatility strategies had been extremely profitable and inverse VIX ETPs such as XIV and SVXY held very large assets (roughly \$1.9~billion and \$2.2~billion, respectively \cite{xiv}). This set the stage for a violent reversal.
+After a long period of low volatility, with the VIX near 9--12 in late 2017, short-volatility strategies had been extremely profitable and inverse VIX ETPs such as XIV and SVXY had grown large, holding about \$3.6~billion between them on 5 February 2018 \cite{bbgvol}. This set the stage for a violent reversal.
 
 \subsubsection{Timeline}
 
@@ -149,7 +149,7 @@ After a long period of low volatility, with the VIX near 9--12 in late 2017, sho
 Late Jan.--2 Feb.\ 2018 & Equity sell-off begins after a strong January rally\\
 5 Feb.\ 2018 & S\&P~500 falls about 4\%; VIX roughly doubles in a day (+115.6\%), its largest one-day percentage rise on record\\
 5 Feb.\ 2018, after close & XIV's indicative value falls by 96\% (from \$108.37 to \$4.22)\\
-6--21 Feb.\ 2018 & Issuer (Credit Suisse) accelerates (6 Feb.) and terminates XIV (final cash settlement on 21 Feb.) \cite{xiv}\\
+6--21 Feb.\ 2018 & Issuer (Credit Suisse) accelerates (6 Feb.) and terminates XIV (final cash settlement on 21 Feb.) \cite{csxiv}\\
 \bottomrule
 \end{tabular}
 \caption{Key events of the Volmageddon episode.}
@@ -161,8 +161,8 @@ Late Jan.--2 Feb.\ 2018 & Equity sell-off begins after a strong January rally\\
 Three mechanisms combined:
 \begin{enumerate}
   \item \textbf{Short exposure to a bounded-below, unbounded-above variable.} By~\eqref{eq:inverse}, a large rise in VIX futures implies a loss approaching 100\% for an inverse product in a single day.
-  \item \textbf{Daily rebalancing feedback.} Buying futures near the close to restore exposure amplified the spike in futures prices \cite{xiv}.
-  \item \textbf{Termination provisions.} The XIV notes allowed the issuer to accelerate the product if the indicative value fell by 80\% or more in one day (specifically, if intraday indicative value was $\le 20\%$ of the previous day's close) \cite{xiv}.
+  \item \textbf{Daily rebalancing feedback.} Buying futures near the close to restore exposure amplified the spike in futures prices \cite{augustin}.
+  \item \textbf{Termination provisions.} The XIV notes allowed the issuer to accelerate the product if the indicative value fell by 80\% or more in one day (specifically, if intraday indicative value was $\le 20\%$ of the previous day's close) \cite{csxiv}.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -174,7 +174,7 @@ Three mechanisms combined:
 
 \subsubsection{Aftermath and lessons}
 
-After the event, regulators and exchanges paid closer attention to leveraged and inverse ETPs, and surviving products were redesigned (for example, SVXY reduced its target exposure from $-1.0\times$ to $-0.5\times$) \cite{xiv}. The main lessons are: (i) selling volatility earns a premium but carries severe crash risk; (ii) daily-reset products are path-dependent and unsuitable for buy-and-hold; and (iii) the structure of a product, including issuer risk and termination clauses, matters as much as its underlying exposure.
+After the event, regulators and exchanges paid closer attention to leveraged and inverse ETPs, and surviving products were redesigned (for example, SVXY reduced its target exposure from $-1.0\times$ to $-0.5\times$) \cite{proshares}. The main lessons are: (i) selling volatility earns a premium but carries severe crash risk; (ii) daily-reset products are path-dependent and unsuitable for buy-and-hold; and (iii) the structure of a product, including issuer risk and termination clauses, matters as much as its underlying exposure.
 
 \subsection{Link to the Rest of the Report}
 The next sections specify the VIX methodology and futures contract in detail, including the term structure (contango versus backwardation); derive $\VIX^2$ as the fair strike of a 30-day variance swap and quantify the convexity adjustment; and implement the Cboe formula, a Heston simulation and a backtest of a VIX-futures hedge including roll yield.
