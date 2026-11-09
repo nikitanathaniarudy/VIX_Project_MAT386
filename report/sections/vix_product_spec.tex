@@ -75,11 +75,11 @@ A VIX future is a cash-settled contract whose final value is the VIX SOQ on the 
 Underlying & Cboe Volatility Index (settled at the SOQ)\\
 Multiplier & \$1{,}000 per index point\\
 Settlement & Cash, at the SOQ on the final settlement date\\
-Final settlement date & Wednesday that is 30 days before the third Friday of the following calendar month (previous business day if a holiday)\verify\\
-Expirations & Several consecutive monthly expirations, plus weekly series\verify\\
+Final settlement date & Wednesday that is 30 days before the third Friday of the following calendar month (previous business day if a holiday) \cite{cboevxfut}\\
+Expirations & Up to 9 consecutive monthly expirations, plus weekly series \cite{cboevxfut}\\
 \bottomrule
 \end{tabular}
-\caption{Principal terms of standard VIX futures. Check the exchange contract specification before finalizing.}
+\caption{Principal terms of standard VIX futures \cite{cboevxfut}.}
 \label{tab:vx-spec}
 \end{table}
 
@@ -98,7 +98,7 @@ before margin and financing considerations. For example, buying at $F_0=18.50$ a
 \end{equation}
 so the futures price is the expected \emph{future} level of the index. It differs from the spot VIX because (i) the market expects mean reversion in volatility, (ii) the VIX is the square root of a variance, introducing a convexity effect (Jensen's inequality), and (iii) hedgers pay a premium for volatility protection. The convexity effect is quantified in the pricing and simulation sections.
 
-\paragraph{Smaller contracts.} Cboe also lists mini VIX futures with a smaller multiplier (\$100 per point)\verify, useful for smaller accounts and hedges.
+\paragraph{Smaller contracts.} Cboe also lists Mini VIX futures (ticker: VXM) with a multiplier of \$100 per index point (one-tenth the standard contract) \cite{cboevxfut}, allowing finer hedging increments for smaller accounts.
 
 %=====================================================================
 \subsection{VIX Options}
@@ -118,10 +118,10 @@ Underlying & VIX (settled at the SOQ); priced off the VIX future with the same e
 Style & European\\
 Multiplier & \$100 per index point\\
 Settlement & Cash, at the SOQ on the expiration date\\
-Expirations & Same schedule as VIX futures (monthly, with weekly series)\verify\\
+Expirations & Monthly cycles matching VIX futures, plus weekly series \cite{cboevxopt}\\
 \bottomrule
 \end{tabular}
-\caption{Principal terms of VIX options.}
+\caption{Principal terms of VIX options \cite{cboevxopt}.}
 \label{tab:vix-options}
 \end{table}
 
@@ -151,7 +151,7 @@ At each date $t$ there is a family of listed VIX futures with different expirati
   F(t,T) \approx \theta + (S_t-\theta)\,e^{-\kappa(T-t)},
   \label{eq:stylized-curve}
 \end{equation}
-where $S_t$ is the current spot VIX and $\kappa>0$ is the speed of mean reversion. When $S_t<\theta$ (calm markets) the curve rises toward $\theta$ (contango); when $S_t>\theta$ (stressed markets) it falls toward $\theta$ (backwardation). Figure~\ref{fig:term-structure} illustrates both cases schematically, and Figure~\ref{fig:term-structure-real} displays the actual observed term structures during the February 2018 Volmageddon and March 2020 COVID-19 episodes. In practice, a risk premium paid by hedgers also pushes the curve upward, which is one reason contango is more common than backwardation\verify.
+where $S_t$ is the current spot VIX and $\kappa>0$ is the speed of mean reversion. When $S_t<\theta$ (calm markets) the curve rises toward $\theta$ (contango); when $S_t>\theta$ (stressed markets) it falls toward $\theta$ (backwardation). Figure~\ref{fig:term-structure} illustrates both cases schematically, and Figure~\ref{fig:term-structure-real} displays the actual observed term structures during the February 2018 Volmageddon and March 2020 COVID-19 episodes. In practice, the variance risk premium---the premium hedgers pay above expected spot volatility for downside protection---also pushes the futures curve upward, which is why contango prevails roughly 80--85\% of the time \cite{carrwu}.
 
 \begin{figure}[htbp]
   \centering
