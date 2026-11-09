@@ -15,6 +15,9 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
 
 % headers
@@ -58,8 +61,12 @@ This report studies the Cboe Volatility Index (VIX) and the derivatives written 
 
 %=====================================================================
 \section{Product specification}
+\label{sec:product-spec}
 %=====================================================================
 \todo{Cboe VIX methodology (30-day variance from a strip of S\&P~500 options, interpolated between two maturities); VIX futures (\$1{,}000 multiplier, cash settlement on the Special Opening Quotation); VIX options (\$100 multiplier, European, SOQ settlement); futures term structure (contango vs backwardation). The methodology formula currently sits in Section~1.1.1 and could move here.}
+
+This section describes how the VIX is constructed and the contracts written on it: VIX futures and VIX options. It closes with the term structure of VIX futures, whose shape (contango or backwardation) drives the cost of holding volatility exposure.
+\input{sections/vix_product_spec}
 
 %=====================================================================
 \section{Pricing and hedging}
@@ -99,6 +106,8 @@ This report studies the Cboe Volatility Index (VIX) and the derivatives written 
 \begin{thebibliography}{99}
 \bibitem{cboewp} Cboe (2019). \emph{Cboe Volatility Index White Paper}. \url{https://www.asx.com.au/content/dam/asx/investors/investment-options/vix/cboe-vix-white-paper.pdf}
 \bibitem{cboemeth} Cboe Global Indices. \emph{Cboe Volatility Index Mathematics Methodology}.
+\bibitem{cboevxfut} Cboe Futures Exchange. \emph{Cboe Volatility Index (VIX) Futures Contract Specification}.
+\bibitem{cboevxopt} Cboe Options Exchange. \emph{VIX Options Contract Specifications}.
 \bibitem{carrmadan} P.~Carr and D.~Madan (1998). Towards a theory of volatility trading. In R.~Jarrow (ed.), \emph{Volatility: New Estimation Techniques for Pricing Derivatives}, Risk Books.
 \bibitem{ddkz} K.~Demeterfi, E.~Derman, M.~Kamal and J.~Zou (1999). \emph{More than you ever wanted to know about volatility swaps}. Goldman Sachs Quantitative Strategies Research Notes.
 \bibitem{carrwu} P.~Carr and L.~Wu (2009). Variance risk premiums. \emph{Review of Financial Studies}, 22(3).
